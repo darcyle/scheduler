@@ -1,0 +1,20 @@
+AppBundle\Entity\ScheduleAppointment:
+    type: entity
+    table: appointments
+    id:
+        id:
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+        time:
+            type: time
+        user:
+            type: string
+            length: 80
+    manyToOne:
+        day:
+            targetEntity: ScheduleDay
+            inversedBy: appointments
+            joinColumn:
+                name: day_id
+                referencedColumnName: id

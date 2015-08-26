@@ -1,0 +1,14 @@
+AppBundle\Entity\ScheduleDay:
+    type: entity
+    table: days
+    id:
+        id:
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+        date:
+            type: date
+    oneToMany:
+        appointments:
+            targetEntity: ScheduleAppointment
+            mappedBy: day
