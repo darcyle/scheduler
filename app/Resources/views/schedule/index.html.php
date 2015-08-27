@@ -1,8 +1,12 @@
 <?php 
 	$view->extend('::base.html.php');
 	$view['slots']->set('title', 'SAG Massage Scheduler');
-
 ?>
+<style>
+	div.row h1 {
+		text-align: center;
+	}
+</style>
 
 <div class="jumbotron">
 	<div class="container">
@@ -10,33 +14,6 @@
 		<p>Here you can easily sign up for massages. All appointments are 30 minutes.</p>
 	</div>
 </div>
-
-<style>
-	div.appointments ul {
-		margin-left: 0px;
-		padding-left: 0px;
-		list-style: none;
-	}
-	div.appointments li {
-		border: 1px solid black;
-		margin-bottom: 5px;
-	}
-	div.appointments h1 {
-		padding: 2px;
-		text-align: center;
-		color: white;
-		background-color: gray;
-		margin-top: 0px;
-		font-size: 14pt;
-	}
-	div.appointments p {
-		margin-left: 10px;
-	}
-	div.row h1 {
-		text-align: center;
-	}
-
-</style>
 
 <div class="container" ng-controller="ScheduleListCtrl">
 <h1>Week of 8/24</h1>
