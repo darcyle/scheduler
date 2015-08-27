@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class ApiController extends Controller
@@ -41,10 +42,10 @@ class ApiController extends Controller
 	public function api($version, Request $request) {
 		$api = \AppBundle\Helper\ApiFactory::getApiByVersion($version);
 		if ($api) {
-			$response = $api->execute($request);
+			$response = $api->execute($request, $this);
 			return $response;
 		}
 
-		throw $this->createNotFoundException('This API version is not found.');
+		return new JsonResponse(array('error' => 'API version not found.'), 404);
 	}
 }
