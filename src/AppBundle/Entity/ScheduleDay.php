@@ -2,6 +2,12 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
+// TODO: Custom Repository Classes
+//      - Need to create a custom repository in order to load all days from a day that is in that week. Sat and Sun
+//        should be considered to be the following week.
+
 class ScheduleDay {
     protected $date;
     protected $appointments;
@@ -79,5 +85,15 @@ class ScheduleDay {
     public function getAppointments()
     {
         return $this->appointments;
+    }
+
+    public function getAppointmentByDateTime($dateTime) {
+        foreach ($this->getAppointments() as $appointment) {
+            if ($appointment->getTime() == $dateTime) {
+                return $appointment;
+            }
+        }
+
+        return null;
     }
 }
