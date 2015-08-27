@@ -4,13 +4,18 @@ namespace AppBundle\API;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AppBundle\Entity\ScheduleDay;
+use AppBundle\Entity\ScheduleAppointment;
 
 // TESTING THIS:
 
 // curl -H "Content-Type: application/json" -X POST -d '{"method":"ping","args":{"id":1,"name":"David Grossman"}}' http://scheduler.lan:8888/api/v1/
 
 class ApiV1 {
-	function execute(Request $request) {
+	public $controller;
+	function execute(Request $request, Controller $controller) {
+		$this->controller = $controller;
 		$content = $request->getContent();
 
 		$data = json_decode($content, true);
@@ -20,14 +25,95 @@ class ApiV1 {
 			return $response;
 		}
 
-		$method = $data['method'];
-		if (method_exists($this, $method)) {
-			$response = $this->$method($data['args'], $request);
-			return $response;
+		try {
+			$method = $data['method'];
+			if (method_exists($this, $method)) {
+				$response = $this->$method($data['args'], $request);
+				return $response;
+			}
+		} catch (\Exception $e) {
+			return new JsonResponse(array('error' => $e->getMessage(), 500));
 		}
 	}
 
-	function ping($data, $request) {
+	function ping($data, Request $request) {
 		return new JsonResponse($data);
+	}
+
+	function getSchedules($data, Request $request) {
+		$date = isset($data['date']) ? $data['date'] : date('Y-m-d');
+
+		// Hit the doctine manager and get the list of schedules and return them.
+	}
+
+// curl -H "Content-Type: application/json" -X POST -d '{"method":"setAppointment","args":{"date":"2015-07-01","time":"11:00AM", "user": "David Grossman"}}' http://scheduler.lan:8888/api/v1/
+
+	function setAppointment($data, Request $request) {
+		$date = new \DateTime($data['date']);
+		$time = new \DateTime($data['time']);
+		$user = isset($data['user']) ? $data['user'] : null;
+
+		// Validate the times. There are only certain times.
+		$em = $this->controller->getDoctrine()->getManager();
+		$scheduleDay = $em->getRepository('AppBundle:ScheduleDay')
+			->findOneBy(array('date' => $date));
+
+		if ($scheduleDay === null) {
+			$scheduleDay = new ScheduleDay;
+			$scheduleDay->setDate($date);
+		}
+
+		$appointment = $scheduleDay->getAppointmentByDateTime($time);
+		if ($appointment === null) {
+			$appointment = new ScheduleAppointment();
+			$appointment->setDay($scheduleDay);
+			$appointment->setTime($time);
+		}
+		
+		$appointment->setUser($user);
+
+		// Try to load the date. If it doesn't exist create it.
+
+		// Try to load the appointment. If it doesn't exist create it.
+		$responseData = array();
+
+		$em->persist($scheduleDay);
+        $em->persist($appointment);
+        $em->flush();
+
+        $responseData = ['day' => $scheduleDay->getID(), 'appt' => $appointment->getID()];
+
+		return new JsonResponse($responseData);
+	}
+
+/*
+curl -H "Content-Type: application/json" -X POST -d '{"method":"deleteAppointment","args":{"date":"2015-07-01","time":"11:00AM"}}' http://scheduler.lan:8888/api/v1/
+*/
+
+	function deleteAppointment($data, Request $request) {
+		$date = new \DateTime($data['date']);
+		$time = new \DateTime($data['time']);
+
+		$em = $this->controller->getDoctrine()->getManager();
+
+		$scheduleDay = $em->getRepository('AppBundle:ScheduleDay')
+				->findOneBy(array('date' => $date));
+
+		if ($scheduleDay === null) {
+			return new JsonResponse(array('error' => 'Appointment not found.'), 404);
+		}
+
+		$appointment = $scheduleDay->getAppointmentByDateTime($time);
+
+		if ($appointment === null) {
+			return new JsonResponse(array('error' => 'Appointment not found.'), 404);
+		}
+
+		$appointment->setUser(null);
+
+		$em->persist($appointment);
+        $em->flush();
+
+		return new JsonResponse(['message' => 'Appointment removed.']);
 	}
 }
