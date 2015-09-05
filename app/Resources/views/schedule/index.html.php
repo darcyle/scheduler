@@ -16,7 +16,7 @@
 </div>
 
 <div class="container" ng-controller="ScheduleListCtrl">
-<h1>Week of 8/24</h1>
+<h1>Blah: {{weekStartDate}}</h1>
 <p>10 availabilities</p>
 	<div class="row">
 		<div class="col-md-2">
