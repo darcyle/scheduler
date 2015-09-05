@@ -1,5 +1,6 @@
 AppBundle\Entity\ScheduleDay:
     type: entity
+    repositoryClass: AppBundle\Entity\ScheduleDayRepository
     table: days
     id:
         id:
