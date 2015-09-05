@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Entity\ScheduleDay;
 use AppBundle\Entity\ScheduleAppointment;
 use Symfony\Component\HttpKernel\Log\LoggerInterface;
+use AppBundle\Helper\Util;
 
 // TESTING THIS:
 
@@ -78,7 +79,7 @@ curl -H "Content-Type: application/json" -X POST -d '{"method":"setAppointment",
 			$appointment->setDay($scheduleDay);
 			$appointment->setTime($time);
 		}
-		
+
 		$appointment->setUser($user);
 
 		// Try to load the date. If it doesn't exist create it.
@@ -137,8 +138,8 @@ curl -H "Content-Type: application/json" -X POST -d '{"method":"deleteAppointmen
 
 		// $logger->info($date->format('Y-m-d H:i:s'));
 
-		$start = new \DateTime('2015-09-08');
-		$end = new \DateTime('2015-09-15');
+		$start = Util::getMondayOfSameWeek($date);
+		$end = Util::getFridayOfSameWeek($date);
 
 		$em = $this->controller->getDoctrine()->getManager();
 		$scheduleDays = $em->getRepository('AppBundle:ScheduleDay')
