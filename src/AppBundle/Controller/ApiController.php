@@ -40,7 +40,9 @@ class ApiController extends Controller
  	 * });
 	 */
 	public function api($version, Request $request) {
-		$api = \AppBundle\Helper\ApiFactory::getApiByVersion($version);
+		$apiFactory = $this->get('api');
+
+		$api = $apiFactory->getApiByVersion($version);
 		if ($api) {
 			$response = $api->execute($request, $this);
 			return $response;

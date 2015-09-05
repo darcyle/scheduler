@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use AppBundle\Entity\ScheduleDay;
 use AppBundle\Entity\ScheduleAppointment;
+use Symfony\Component\HttpKernel\Log\LoggerInterface;
 
 // TESTING THIS:
 
@@ -14,6 +15,12 @@ use AppBundle\Entity\ScheduleAppointment;
 
 class ApiV1 {
 	public $controller;
+	public $logger;
+
+	public function __construct(LoggerInterface $logger) {
+		$this->logger = $logger;
+	}
+
 	function execute(Request $request, Controller $controller) {
 		$this->controller = $controller;
 		$content = $request->getContent();
@@ -46,7 +53,9 @@ class ApiV1 {
 		// Hit the doctine manager and get the list of schedules and return them.
 	}
 
-// curl -H "Content-Type: application/json" -X POST -d '{"method":"setAppointment","args":{"date":"2015-07-01","time":"11:00AM", "user": "David Grossman"}}' http://scheduler.lan:8888/api/v1/
+/*
+curl -H "Content-Type: application/json" -X POST -d '{"method":"setAppointment","args":{"date":"2015-07-01","time":"11:00AM", "user": "David Grossman"}}' http://scheduler.lan:8888/api/v1/
+*/
 
 	function setAppointment($data, Request $request) {
 		$date = new \DateTime($data['date']);
@@ -78,10 +87,10 @@ class ApiV1 {
 		$responseData = array();
 
 		$em->persist($scheduleDay);
-        $em->persist($appointment);
-        $em->flush();
+		$em->persist($appointment);
+		$em->flush();
 
-        $responseData = ['day' => $scheduleDay->getID(), 'appt' => $appointment->getID()];
+		$responseData = ['day' => $scheduleDay->getID(), 'appt' => $appointment->getID()];
 
 		return new JsonResponse($responseData);
 	}
@@ -112,8 +121,48 @@ curl -H "Content-Type: application/json" -X POST -d '{"method":"deleteAppointmen
 		$appointment->setUser(null);
 
 		$em->persist($appointment);
-        $em->flush();
+		$em->flush();
 
 		return new JsonResponse(['message' => 'Appointment removed.']);
+	}
+
+	function getWeek($data, Request $request) {
+		if (isset($data['date'])) {
+			$date = new \DateTime($data['date']);
+		} else {
+			$date = new \DateTime('now');
+		}
+
+		$logger = $this->logger->info('test');
+
+		// $logger->info($date->format('Y-m-d H:i:s'));
+
+		$start = new \DateTime('2015-09-08');
+		$end = new \DateTime('2015-09-15');
+
+		$em = $this->controller->getDoctrine()->getManager();
+		$scheduleDays = $em->getRepository('AppBundle:ScheduleDay')
+			->getWeek($start, $end);
+
+
+		// Serialize the output:
+		$serialized = [];
+		foreach ($scheduleDays as $scheduleDay) {
+			$day = array(
+				'date' => $scheduleDay->getDate()->format('Y-m-d'),
+				'appointments' => array()
+			);
+
+			foreach ($scheduleDay->getAppointments() as $appointment) {
+				$day['appointments'][] = array(
+					'time' => $appointment->getTime()->format('H:i'),
+					'user' => $appointment->getUser()
+				);
+			}
+			$serialized[] = $day;
+		}
+
+
+		return new JsonResponse(['schedules' => $serialized]);
 	}
 }
