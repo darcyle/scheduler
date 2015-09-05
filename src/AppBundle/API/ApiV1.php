@@ -165,6 +165,6 @@ curl -H "Content-Type: application/json" -X POST -d '{"method":"deleteAppointmen
 		}
 
 
-		return new JsonResponse(['schedules' => $serialized]);
+		return new JsonResponse(['schedules' => $serialized, 'weekStartDate' => $start->format('m-d-Y')]);
 	}
 }
