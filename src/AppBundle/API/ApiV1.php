@@ -150,6 +150,7 @@ curl -H "Content-Type: application/json" -X POST -d '{"method":"deleteAppointmen
 		foreach ($scheduleDays as $scheduleDay) {
 			$day = array(
 				'date' => $scheduleDay->getDate()->format('Y-m-d'),
+				'day' => (int)$scheduleDay->getDate()->format('w'),
 				'appointments' => array()
 			);
 
