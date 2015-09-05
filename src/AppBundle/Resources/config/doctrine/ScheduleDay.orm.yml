@@ -11,5 +11,6 @@ AppBundle\Entity\ScheduleDay:
             type: date
     oneToMany:
         appointments:
+            orderBy: { 'time': 'ASC' }
             targetEntity: ScheduleAppointment
             mappedBy: day
