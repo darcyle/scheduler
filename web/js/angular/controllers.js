@@ -2,8 +2,16 @@ var scheduleApp = angular.module('scheduleApp', []);
 
 var scheduleControllers = angular.module('scheduleControllers', []);
 
-scheduleControllers.controller('ScheduleListCtrl', ['$scope', '$http', function ($scope, $http) {
-   $scope.api = function(method, args) {
+
+scheduleControllers.controller('ScheduleListCtrl', ['$scope', '$http', 'api', function ($scope, $http, api) {
+	var data  = api('getWeek');
+	$scope.schedules = data.schedules;
+	$scope.weekStartDate = data.weekStartDate;
+
+	console.log(data);
+	console.log($scope);
+}]).factory('api', ['$http', function($http) {
+	return function(method, args) {
    		console.log('API: ', method, args);
    		if (typeof args == 'undefined') {
    			args = {};
@@ -23,9 +31,6 @@ scheduleControllers.controller('ScheduleListCtrl', ['$scope', '$http', function 
 	        });
 	    return responseData;
 	};
-
-	var data  = $scope.api('getWeek');
-	$scope.schedules = data.schedules;
-	$scope.weekStartDate = data.weekStartDate;
 }]);
+
 
