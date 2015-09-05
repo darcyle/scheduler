@@ -16,7 +16,7 @@
 </div>
 
 <div class="container" ng-controller="ScheduleListCtrl">
-<h1>Blah: {{weekStartDate}}</h1>
+<h1>Week of {{weekStartDate}}</h1>
 <p>10 availabilities</p>
 	<div class="row">
 		<div class="col-md-2">
@@ -25,7 +25,7 @@
 				<div class="panel panel-danger">
 					<div class="panel-heading">10:30AM</div>
 					<div class="panel-body">
-						David Grossman <a href="#" class="btn btn-danger btn-block">Cancel</a>
+						David Grossman <a href="#" class="btn btn-danger btn-block" ng-click="wtf()">Cancel</a>
 					</div>
 				</div>
 				<div class="panel panel-success">
