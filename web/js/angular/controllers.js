@@ -3,6 +3,7 @@ var scheduleApp = angular.module('scheduleApp', []);
 var scheduleControllers = angular.module('scheduleControllers', []);
 
 scheduleControllers.controller('ScheduleListCtrl', ['$scope', '$http', 'api', function ($scope, $http, api) {
+	$scope.onlyAvail = false;
 	$scope.schedules = [
 		{
 			"day":"Mon",
@@ -52,6 +53,17 @@ scheduleControllers.controller('ScheduleListCtrl', ['$scope', '$http', 'api', fu
 		});	
 		
 		return schedule;	
+	}
+
+	$scope.getAvailableCount = function() {
+		var count = 0;
+		angular.forEach($scope.schedules, function(schedule, key) {
+			angular.forEach(schedule.appointments, function(appointment, key){
+				if (appointment.user == null) count++;
+			});
+		});
+
+		return count;
 	}
 
 	$scope.getScheduleAppointment = function(schedule, time) {
