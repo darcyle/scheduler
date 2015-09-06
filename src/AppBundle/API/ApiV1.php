@@ -160,23 +160,7 @@ curl -H "Content-Type: application/json" -X POST -d '{"method":"deleteAppointmen
 					'user' => $appointment->getUsername()
 				);
 			}
-			$serialized[(int)$scheduleDay->getDate()->format('w')] = $day;
-		}
-
-		// Add any missing days not in the database.
-		for($i=1;$i<=5;$i++) {
-			if (!isset($serialized[$i])) {
-				// Create a default object.
-				$offset = $i - 1;
-				$date = clone $start;
-				$date->add(date_interval_create_from_date_string("$offset day"));
-				$day = array(
-					'date' => $date->format('Y-m-d'),
-					'day' => $date->format('D'),
-					'appointments' => array()
-				);
-				$serialized[$i] = $day;
-			}
+			$serialized[] = $day;
 		}
 
 		return new JsonResponse(['schedules' => $serialized, 'weekStartDate' => $start->format('m-d-Y')]);
