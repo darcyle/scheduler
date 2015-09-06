@@ -127,6 +127,10 @@ curl -H "Content-Type: application/json" -X POST -d '{"method":"deleteAppointmen
 		return new JsonResponse(['message' => 'Appointment removed.']);
 	}
 
+
+/*
+curl -H "Content-Type: application/json" -X POST -d '{"method":"getWeek","args":[]}' http://scheduler.lan:8888/api/v1/
+*/
 	function getWeek($data, Request $request) {
 		if (isset($data['date'])) {
 			$date = new \DateTime($data['date']);
@@ -134,13 +138,11 @@ curl -H "Content-Type: application/json" -X POST -d '{"method":"deleteAppointmen
 			$date = new \DateTime('now');
 		}
 
-		$logger = $this->logger->info('test');
-
-		// $logger->info($date->format('Y-m-d H:i:s'));
-
+		// Obtain week start / end of the date provided.
 		$start = Util::getMondayOfSameWeek($date);
 		$end = Util::getFridayOfSameWeek($date);
 
+		// Get a weeks worth of data
 		$em = $this->controller->getDoctrine()->getManager();
 		$scheduleDays = $em->getRepository('AppBundle:ScheduleDay')
 			->getWeek($start, $end);
