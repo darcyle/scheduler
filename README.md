@@ -16,7 +16,8 @@ Example apache config:
     SetEnv          SYMFONY__DATABASE__HOST localhost
     SetEnv          SYMFONY__DATABASE__PORT 8889
     SetEnv          SYMFONY__DATABASE__DRIVER pdo_mysql
-    SetEnv          SYMFONY__DATABASE__name scheduler
+    SetEnv          SYMFONY__DATABASE__NAME scheduler
+    SetEnv          SYMFONY__SCHEDULER__SECRET 32charactersofgarbage
 
 
     DocumentRoot /Applications/MAMP/htdocs/web
