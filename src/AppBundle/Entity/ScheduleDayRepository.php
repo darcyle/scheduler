@@ -15,6 +15,7 @@ class ScheduleDayRepository extends EntityRepository {
 		$queryBuilder = $this->createQueryBuilder('s');
 		$query = $queryBuilder
 			->andWhere($queryBuilder->expr()->between('s.date', ':date_from', ':date_to'))
+			->orderBy('s.date', 'ASC')
 			->setParameter('date_from', $start, \Doctrine\DBAL\Types\Type::DATETIME)
 			->setParameter('date_to', $end, \Doctrine\DBAL\Types\Type::DATETIME)
 			->getQuery();
