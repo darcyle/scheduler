@@ -8,7 +8,7 @@ AppBundle\Entity\ScheduleAppointment:
     fields:
         time:
             type: time
-        user:
+        username:
             type: string
             length: 80
             nullable: true

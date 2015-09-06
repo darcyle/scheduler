@@ -7,7 +7,7 @@ class ScheduleAppointment {
 
     protected $day_id;
     protected $time;
-    protected $user; // Just the first.last
+    protected $username; // Just the first.last
 
     protected $day; // ScheduleDay
     /**
@@ -50,26 +50,26 @@ class ScheduleAppointment {
     }
 
     /**
-     * Set user
+     * Set username
      *
-     * @param string $user
+     * @param string $username
      * @return ScheduleAppointment
      */
-    public function setUser($user)
+    public function setUsername($username)
     {
-        $this->user = $user;
+        $this->username = $username;
 
         return $this;
     }
 
     /**
-     * Get user
+     * Get username
      *
      * @return string 
      */
-    public function getUser()
+    public function getUsername()
     {
-        return $this->user;
+        return $this->username;
     }
 
     /**

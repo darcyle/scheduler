@@ -80,7 +80,7 @@ curl -H "Content-Type: application/json" -X POST -d '{"method":"setAppointment",
 			$appointment->setTime($time);
 		}
 
-		$appointment->setUser($user);
+		$appointment->setUsername($user);
 
 		// Try to load the date. If it doesn't exist create it.
 
@@ -119,7 +119,7 @@ curl -H "Content-Type: application/json" -X POST -d '{"method":"deleteAppointmen
 			return new JsonResponse(array('error' => 'Appointment not found.'), 404);
 		}
 
-		$appointment->setUser(null);
+		$appointment->setUsername(null);
 
 		$em->persist($appointment);
 		$em->flush();
@@ -157,7 +157,7 @@ curl -H "Content-Type: application/json" -X POST -d '{"method":"deleteAppointmen
 			foreach ($scheduleDay->getAppointments() as $appointment) {
 				$day['appointments'][] = array(
 					'time' => $appointment->getTime()->format('h:iA'),
-					'user' => $appointment->getUser()
+					'user' => $appointment->getUsername()
 				);
 			}
 			$serialized[(int)$scheduleDay->getDate()->format('w')] = $day;
