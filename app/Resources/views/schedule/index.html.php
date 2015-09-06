@@ -51,7 +51,7 @@
 				</nav>
 			</div>
 			
-			<div ng-repeat="schedule in schedules" class="col-md-2">
+			<div ng-repeat="schedule in schedules" ng-class="'col-md-'+ columnSize">
 				<h1>{{schedule.day}}</h1>
 				<div class="appointments">
 					<div ng-repeat="appointment in schedule.appointments | available: onlyAvail" ng-class="{'panel-success': appointment.user === null, 'panel-danger': appointment.user !== null}" class="panel">

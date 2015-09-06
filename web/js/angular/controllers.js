@@ -3,18 +3,12 @@ var scheduleApp = angular.module('scheduleApp', []);
 var scheduleControllers = angular.module('scheduleControllers', []);
 
 scheduleControllers.controller('ScheduleListCtrl', ['$scope', '$http', 'api', function ($scope, $http, api) {
+	$scope.columnSize = 3;
 	$scope.onlyAvail = false;
+	$scope.schedulecount = 0;
 	$scope.schedules = [
 		{
-			"day":"Mon",
-			"appointments": []
-		},
-		{
 			"day":"Tue",
-			"appointments": []
-		},
-		{
-			"day":"Wed",
 			"appointments": []
 		},
 		{
@@ -35,6 +29,7 @@ scheduleControllers.controller('ScheduleListCtrl', ['$scope', '$http', 'api', fu
 					$scope.schedules = data.schedules;
 					console.log(data.schedules);
 					$scope.weekStartDate = data.weekStartDate;
+					$scope.columnSize = Math.floor(10 / data.schedules.length);
 				}
 			);
 		},
@@ -42,6 +37,10 @@ scheduleControllers.controller('ScheduleListCtrl', ['$scope', '$http', 'api', fu
 
 		}
 	);
+
+	$scope.wtf = function() {
+		debugger;
+	}
 
 	$scope.getScheduleDay = function (date) {
 		schedule = null;
