@@ -145,25 +145,39 @@ curl -H "Content-Type: application/json" -X POST -d '{"method":"deleteAppointmen
 		$scheduleDays = $em->getRepository('AppBundle:ScheduleDay')
 			->getWeek($start, $end);
 
-
 		// Serialize the output:
 		$serialized = [];
 		foreach ($scheduleDays as $scheduleDay) {
 			$day = array(
 				'date' => $scheduleDay->getDate()->format('Y-m-d'),
-				'day' => (int)$scheduleDay->getDate()->format('w'),
+				'day' => $scheduleDay->getDate()->format('D'),
 				'appointments' => array()
 			);
 
 			foreach ($scheduleDay->getAppointments() as $appointment) {
 				$day['appointments'][] = array(
-					'time' => $appointment->getTime()->format('H:i'),
+					'time' => $appointment->getTime()->format('h:iA'),
 					'user' => $appointment->getUser()
 				);
 			}
-			$serialized[] = $day;
+			$serialized[(int)$scheduleDay->getDate()->format('w')] = $day;
 		}
 
+		// Add any missing days not in the database.
+		for($i=1;$i<=5;$i++) {
+			if (!isset($serialized[$i])) {
+				// Create a default object.
+				$offset = $i - 1;
+				$date = clone $start;
+				$date->add(date_interval_create_from_date_string("$offset day"));
+				$day = array(
+					'date' => $date->format('Y-m-d'),
+					'day' => $date->format('D'),
+					'appointments' => array()
+				);
+				$serialized[$i] = $day;
+			}
+		}
 
 		return new JsonResponse(['schedules' => $serialized, 'weekStartDate' => $start->format('m-d-Y')]);
 	}
