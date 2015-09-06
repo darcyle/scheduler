@@ -20,11 +20,20 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-md-2" style="text-align: center">
-				<h3 align="center">{{weekStartDate}}
-				<button class="btn btn-primary" type="button">
-				  Availabilites <span class="badge">5</span>
+				<h3 align="center">{{weekStartDate}}</h3>
+				<button class="btn btn-primary" type="button" style="margin-bottom: 3px">
+				  Availabilites <span class="badge">{{getAvailableCount()}}</span>
 				</button>
-				</h3>
+				
+
+				<div class="btn-group" data-toggle="buttons">
+					<label class="btn btn-primary active" ng-click="onlyAvail = false">
+						<input type="radio" name="options" id="option1" autocomplete="off" checked="checked"> All
+					</label>
+					<label class="btn btn-primary" ng-click="onlyAvail = true">
+						<input type="radio" name="options" id="option2" autocomplete="off"> Available
+					</label>
+				</div>
 
 				<nav>
 					<ul class="pagination">
@@ -45,7 +54,7 @@
 			<div ng-repeat="schedule in schedules" class="col-md-2">
 				<h1>{{schedule.day}}</h1>
 				<div class="appointments">
-					<div ng-repeat="appointment in schedule.appointments" ng-class="{'panel-success': appointment.user === null, 'panel-danger': appointment.user !== null}" class="panel">
+					<div ng-repeat="appointment in schedule.appointments | available: onlyAvail" ng-class="{'panel-success': appointment.user === null, 'panel-danger': appointment.user !== null}" class="panel">
 						<div class="panel-heading">{{appointment.time}}</div>
 						<div class="panel-body">
 							<div class="user">{{appointment.user}}</div>
