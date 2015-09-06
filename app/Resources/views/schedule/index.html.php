@@ -21,7 +21,7 @@
 		<div class="row">
 			<div class="col-md-2" style="text-align: center">
 				<h3 align="center">{{weekStartDate}}</h3>
-				<button class="btn btn-primary" type="button" style="margin-bottom: 3px">
+				<button class="btn" type="button" style="margin-bottom: 3px" ng-class="{'btn-primary': getAvailableCount(), 'btn-danger': getAvailableCount() == 0}">
 				  Availabilites <span class="badge">{{getAvailableCount()}}</span>
 				</button>
 				
