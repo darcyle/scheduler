@@ -1,6 +1,6 @@
 # This file is auto-generated during the composer install
 parameters:
-    database_driver: "%database.driver%"
+    database_driver: pdo_pgsql
     database_host: "%database.host%"
     database_port: "%database.port%"
     database_name: "%database.name%"
