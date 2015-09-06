@@ -96,4 +96,17 @@ class ScheduleDay {
 
         return null;
     }
+
+    // Find an appointment in the next 15 minutes
+    public function findNextAppoinment($timeUntil = 900) {
+        $now = time();
+        foreach ($this->getAppointments() as $appointment) {
+            $diff = $appointment->getStartDateTime()->getTimestamp() - $now;
+            if ($now >= 0 and $diff <= $timeUntil) {
+                return $appointment;
+            }
+        }
+
+        return false;
+    }
 }

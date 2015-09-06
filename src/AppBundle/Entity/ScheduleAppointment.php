@@ -94,4 +94,8 @@ class ScheduleAppointment {
     {
         return $this->day;
     }
+
+    public function getStartDateTime() {
+        return new \DateTime($this->getDay()->getDate()->format('Y-m-d') . ' ' . $this->getTime()->format('H:i:s'));
+    }
 }
