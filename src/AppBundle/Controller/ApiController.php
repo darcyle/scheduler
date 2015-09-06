@@ -11,27 +11,10 @@ use Symfony\Component\HttpFoundation\Request;
 class ApiController extends Controller
 {
 	/**
-	 * @Route("/schedule/number")
-	 */
-	public function numberAction()
-	{
-		$number = rand(0, 100);
-
-		return new Response(
-			'<html><body>Schedule number: '.$number.'</body></html>'
-		);
-	}
-
-	/**
 	 * @Route("/schedule/")
 	 */
 	function indexAction(Request $request) {
-		// Get parameters for the week that is displayed.
-
-		return $this->render(
-        	'views/schedule/index.html.php',
-        array('name' => 'NAMEGOESHERE')
-    );
+		return $this->render('views/schedule/index.html.php');
 	}
 	
 	/**
