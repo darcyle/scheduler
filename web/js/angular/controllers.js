@@ -3,43 +3,43 @@ var scheduleApp = angular.module('scheduleApp', []);
 var scheduleControllers = angular.module('scheduleControllers', []);
 
 scheduleControllers.controller('ScheduleListCtrl', ['$scope', '$http', 'api', function ($scope, $http, api) {
-	$scope.columnSize = 3;
-	$scope.onlyAvail = false;
-	$scope.schedulecount = 0;
-	$scope.schedules = [
-		{
-			"day":"Tue",
-			"appointments": []
-		},
-		{
-			"day":"Thu",
-			"appointments": []
-		},
-		{
-			"day":"Fri",
-			"appointments": []
+	$scope.getNextDate = function() {
+		// Advance the date. Request the new week.
+	}
+
+	$scope.getPreviousWeek = function() {
+		// Previous date. Request new week.
+
+		// SUbtract a week.
+
+		// Update flag that previous is enabled if diff of earliest monday and previous week in 
+		// milliseconds is not positive.
+
+
+	}
+
+	$scope.requestWeek = function() {
+		// Request the week!
+		var args = {}
+		if ($scope.weekStartDate != "Date") {
+			args.date = $scope.weekStartDate.toFormat('yyyy-MM-dd');
 		}
-	];
-	$scope.weekStartDate = '';
+		api('getWeek').then(
+			function(data){
+				$scope.$apply(
+					function(){
+						$scope.schedules = data.schedules;
+						console.log(data.schedules);
+						$scope.weekStartDate = new XDate(data.weekStartDate);
+						console.log($scope.weekStartDate);
+						$scope.columnSize = Math.floor(12 / data.schedules.length);
+					}
+				);
+			},
+			function(error) {
 
-	api('getWeek').then(
-		function(data){
-			$scope.$apply(
-				function(){
-					$scope.schedules = data.schedules;
-					console.log(data.schedules);
-					$scope.weekStartDate = data.weekStartDate;
-					$scope.columnSize = Math.floor(10 / data.schedules.length);
-				}
-			);
-		},
-		function(error) {
-
-		}
-	);
-
-	$scope.wtf = function() {
-		debugger;
+			}
+		);		
 	}
 
 	$scope.getScheduleDay = function (date) {
@@ -76,7 +76,10 @@ scheduleControllers.controller('ScheduleListCtrl', ['$scope', '$http', 'api', fu
 	}
 
 	$scope.cancel = function(schedule, appointment) {
-		api('deleteAppointment', {"date":schedule.date,"time":appointment.time}).then(
+		api(
+			'deleteAppointment', 
+			{"date":schedule.date,"time":appointment.time}
+		).then(
 			function(data){
 				$scope.$apply(function(){
 					appointment.user = null;
@@ -86,15 +89,34 @@ scheduleControllers.controller('ScheduleListCtrl', ['$scope', '$http', 'api', fu
 
 			}
 		);
-		
-/*
-
-*/
 	}
+	
+	// RUN ON START
+	$scope.columnSize = 4;
+	$scope.onlyAvail = false;
+	$scope.schedulecount = 0;
+	$scope.previousWeekEnabled = false;
+	$scope.weekStartDate = 'Date';
+	$scope.schedules = [
+		{
+			"day":"Tue",
+			"appointments": []
+		},
+		{
+			"day":"Thu",
+			"appointments": []
+		},
+		{
+			"day":"Fri",
+			"appointments": []
+		}
+	];
+
+	$scope.requestWeek();
+
 }]).factory('api', ['$http', function($http) {
 	return function(method, args) {
 		var promise = new Promise(function(resolve, reject){
-			console.log('API: ', method, args);
 			if (typeof args == 'undefined') {
 				args = {};
 			}
