@@ -155,7 +155,7 @@ function updatePadding() {
 		  {{weekStartDate.toString('MMM d')}} <span class="badge" ng-bind="getAvailableCount()">0</span>
 		</button>		
 	</div>
-	<div class="col-md-12" style="margin-bottom: 3px">
+	<div class="col-md-12" style="margin-bottom: 3px; display: none">
 		<label class="btn btn-default" ng-class="{'active': onlyAvail}">
 			<input type="checkbox" name="options" id="option1" autocomplete="off" checked="checked" ng-model="onlyAvail"> Only Show Available
 		</label>	
