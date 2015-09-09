@@ -109,6 +109,14 @@ h3,h4,h5 {
 #main {
  padding-top:120px;
 }
+
+div.fullInput {
+	display: block;
+}
+
+div.weekSelector .btn {
+	padding: px 15px;
+}
 </style>
 
 <script>
@@ -130,40 +138,28 @@ function updatePadding() {
 	<div class="col-md-12">
 		<div class="page-header">
 			<h1>SAG Massage Scheduler</h1>
-			<h1><small>All appointments are 30 minutes.</small></h1>
 		</div>
 	</div>
 
-	<div class="col-md-12">
-		<h2 ng-bind="weekStartDate.toString('MM/dd/yyyy')">Date</h2>
+	<div class="col-md-12 weekSelector btn-group-lg">
 		<button class="btn btn-danger" type="button" style="margin-bottom: 3px" ng-class="{'btn-primary': getAvailableCount(), 'btn-danger': getAvailableCount() == 0}">
-		  Availabilites <span class="badge" ng-bind="getAvailableCount()">0</span>
+		  {{weekStartDate.toString('MMM d')}} <span class="badge" ng-bind="getAvailableCount()">0</span>
 		</button>
-		
-		<label class="btn btn-primary active" ng-click="onlyAvail = false">
-			<input type="radio" name="options" id="option1" autocomplete="off" checked="checked"> All
-		</label>
-		<label class="btn btn-primary" ng-click="onlyAvail = true">
-			<input type="radio" name="options" id="option2" autocomplete="off"> Available
-		</label>
-			
-	</div>    
-	<div class="col-md-12">
-		<div class="navbar-header">
-			<ul class="pagination" style="margin-top: 1px; margin-bottom:5px">
-				<li>
-					<a href="#" aria-label="Previous">
-						<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-					</a>
-				</li>
-				<li>
-					<a href="#" aria-label="Next">
-						<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-					</a>
-				</li>
-			</ul>
-		</div>
+		<button class="btn btn-danger" type="button" style="margin-bottom: 3px" ng-class="{'btn-primary': getAvailableCount(), 'btn-danger': getAvailableCount() == 0}">
+		  {{weekStartDate.toString('MMM d')}} <span class="badge" ng-bind="getAvailableCount()">0</span>
+		</button>		
+		<button class="btn btn-danger" type="button" style="margin-bottom: 3px" ng-class="{'btn-primary': getAvailableCount(), 'btn-danger': getAvailableCount() == 0}">
+		  {{weekStartDate.toString('MMM d')}} <span class="badge" ng-bind="getAvailableCount()">0</span>
+		</button>
+		<button class="btn btn-danger" type="button" style="margin-bottom: 3px" ng-class="{'btn-primary': getAvailableCount(), 'btn-danger': getAvailableCount() == 0}">
+		  {{weekStartDate.toString('MMM d')}} <span class="badge" ng-bind="getAvailableCount()">0</span>
+		</button>		
 	</div>
+	<div class="col-md-12" style="margin-bottom: 3px">
+		<label class="btn btn-default" ng-class="{'active': onlyAvail}">
+			<input type="checkbox" name="options" id="option1" autocomplete="off" checked="checked" ng-model="onlyAvail"> Only Show Available
+		</label>	
+	</div> 
 </nav>
 
 
@@ -176,15 +172,22 @@ function updatePadding() {
 						<div class="panel-body">
 							<h3>{{appointment.time}}</h3>
 
-							<div class="user">{{appointment.user}}</div>
-							<div ng-if="appointment.user === null" class="input-group text-center">
-								<input  type="text" class="form-control input-lg" placeholder="Enter your first.last">
-								<span   class="input-group-btn">
-									<button class="btn btn-lg btn-primary glyphicon glyphicon-calendar" type="button"></button>
+							
+							<div ng-if="appointment.user === null" class="input-group text-center" ng-class="{'fullInput': addUser.length == 0}">
+								<input  type="text" class="form-control input-lg" placeholder="Enter your first.last" ng-model="addUser">
+								<span   class="input-group-btn" ng-class="{'hidden': addUser.length == 0}">
+									<button class="btn btn-lg btn-primary glyphicon glyphicon-plus" type="button"></button>
 								</span>
 							</div>
 							
-							<a ng-if="appointment.user !== null" class="btn btn-danger btn-block" ng-click="cancel(schedule, appointment)">Cancel</a>
+							<div ng-if="appointment.user !== null" class="input-group text-center">
+								<input  type="text" class="form-control input-lg" value="{{appointment.user}}" disabled="disabled" />
+								<span   class="input-group-btn">
+									<button class="btn btn-lg btn-danger glyphicon glyphicon-remove" type="button"></button>
+								</span>
+							</div>							
+
+							
 							
 						</div>
 					</div>

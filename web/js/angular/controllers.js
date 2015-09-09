@@ -92,6 +92,7 @@ scheduleControllers.controller('ScheduleListCtrl', ['$scope', '$http', 'api', fu
 	}
 	
 	// RUN ON START
+	$scope.addUser = '';
 	$scope.columnSize = 4;
 	$scope.onlyAvail = false;
 	$scope.schedulecount = 0;
