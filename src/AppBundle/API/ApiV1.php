@@ -165,6 +165,40 @@ curl -H "Content-Type: application/json" -X POST -d '{"method":"getWeek","args":
 			$serialized[] = $day;
 		}
 
-		return new JsonResponse(['schedules' => $serialized, 'weekStartDate' => $start->format('m-d-Y')]);
+		// Add in the data for each week.
+
+		// First get the earliest possible start date.
+		$start = Util::getMondayOfSameWeek(new \DateTime('now'));
+		$end = Util::getFridayOfSameWeek(new \DateTime('now'));
+		$weeks = array();
+		for ($i=0;$i<=3;$i++) {
+			$week = array();
+			$week['date'] = $start->format('m/d/Y');
+
+			// Get the availabilities for the week.
+			$scheduleDays = $em->getRepository('AppBundle:ScheduleDay')
+				->getWeek($start, $end);
+
+			$availabilities = 0;
+			foreach ($scheduleDays as $scheduleDay) {
+				foreach ($scheduleDay->getAppointments() as $appointment) {
+					if ($appointment->getUsername() == null) {
+						++$availabilities;
+					}
+				}
+			}
+
+			$week['availabilities'] = $availabilities;
+			$weeks[] = $week;
+
+			$start->add(date_interval_create_from_date_string('7 days'));
+			$end->add(date_interval_create_from_date_string('7 days'));
+		}
+
+		return new JsonResponse([
+			'schedules' => $serialized, 
+			'weeks' => $weeks, 
+			'weekStartDate' => $start->format('m-d-Y')
+		]);
 	}
 }
