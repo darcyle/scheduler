@@ -117,6 +117,13 @@ div.fullInput {
 div.weekSelector .btn {
 	padding: px 15px;
 }
+
+div.panel-success {
+	box-shadow: 5px 5px 5px #888888;
+}
+div.panel-danger {
+	box-shadow: 5px 5px 5px #888888;
+}
 </style>
 
 <script>
@@ -128,7 +135,7 @@ $(document).ready(function(){
 });
 
 function updatePadding() {
-	$('#main').css("padding-top", $('#topheader').height());
+	$('#main').css("padding-top", $('#topheader').height() + 5);
 }
 </script>
 
@@ -166,11 +173,11 @@ function updatePadding() {
 	<div class="container" id="main">
 		<div class="row">			
 			<div ng-repeat="schedule in schedules" ng-class="'col-md-'+ columnSize">
-				<h1>{{schedule.day}}</h1>
+				<h1 style="display: none">{{schedule.day}}</h1>
 				<div class="appointments">
 					<div ng-repeat="appointment in schedule.appointments | available: onlyAvail" ng-class="{'panel-success': appointment.user === null, 'panel-danger': appointment.user !== null}" class="panel">
 						<div class="panel-body">
-							<h3>{{appointment.time}}</h3>
+							<h3>{{schedule.day}} {{appointment.time}}</h3>
 
 							
 							<div ng-if="appointment.user === null" class="input-group text-center" ng-class="{'fullInput': addUser.length == 0}">
